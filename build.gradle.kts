@@ -1,24 +1,54 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.10"
+    val kotlinVersion = "1.7.10"
+    val springBootVersion = "2.7.2"
+
+    id("org.springframework.boot") version springBootVersion apply false
+    id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
+
+    kotlin("jvm") version kotlinVersion apply false
+    kotlin("kapt") version kotlinVersion apply false
+    kotlin("plugin.spring") version kotlinVersion apply false
+    kotlin("plugin.jpa") version kotlinVersion apply false
 }
 
-group = "me.jeonguk"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
-dependencies {
-    testImplementation(kotlin("test"))
-}
+subprojects {
+    apply {
+        plugin("org.springframework.boot")
+        plugin("io.spring.dependency-management")
+        plugin("kotlin")
+        plugin("java")
+        plugin("org.jetbrains.kotlin.jvm")
+        plugin("org.jetbrains.kotlin.plugin.spring")
+    }
 
-tasks.test {
-    useJUnitPlatform()
-}
+    group = "me.jeonguk"
+    version = "0.0.1-SNAPSHOT"
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    dependencies { }
+
+    configure<JavaPluginExtension> {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    tasks {
+        withType<KotlinCompile> {
+            kotlinOptions {
+                freeCompilerArgs = listOf("-Xjsr305=strict")
+                jvmTarget = "11"
+            }
+        }
+
+        withType<Test> {
+            useJUnitPlatform()
+        }
+    }
 }
