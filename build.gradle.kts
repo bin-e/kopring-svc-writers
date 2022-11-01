@@ -30,7 +30,7 @@ subprojects {
     }
 
     group = "me.jeonguk"
-    version = "0.0.1-SNAPSHOT"
+    version = "0.0.1"
 
     dependencies { }
 
@@ -43,7 +43,7 @@ subprojects {
         withType<KotlinCompile> {
             kotlinOptions {
                 freeCompilerArgs = listOf("-Xjsr305=strict")
-                jvmTarget = "11"
+                jvmTarget = "17"
             }
         }
 
